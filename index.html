@@ -1,0 +1,724 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>دولة الجوامعة</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Reem+Kufi:wght@500;700&display=swap">
+<style>
+/* Layout: بيان رسمي لدولة صغيرة. ترشيح الرئيس فوق، ثم شريط شد الحبل والأعضاء، ثم المكانين جنب بعض، ثم الدستور. */
+:root {
+  --bg: #f3f5f1;
+  --surface: #ffffff;
+  --fg: #17211b;
+  --muted: #5b6a60;
+  --line: #d7ded7;
+  --green: #1f7a4f;
+  --on-green: #ffffff;
+  --orange: #c4421f;
+  --on-orange: #ffffff;
+  --free: #e8ede8;
+  --font-display: "Reem Kufi", "Cairo", "Segoe UI", Tahoma, sans-serif;
+  --font-body: "Cairo", "Segoe UI", Tahoma, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1612; --surface: #17211b; --fg: #e9efe9; --muted: #9aab9f; --line: #2a382f;
+    --green: #3fb37a; --on-green: #0b130f; --orange: #f07a55; --on-orange: #1a0b06; --free: #202d25;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1612; --surface: #17211b; --fg: #e9efe9; --muted: #9aab9f; --line: #2a382f;
+  --green: #3fb37a; --on-green: #0b130f; --orange: #f07a55; --on-orange: #1a0b06; --free: #202d25;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.7;
+  direction: rtl; text-align: right;
+  padding-block: 28px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 960px; margin-inline: auto; display: flex; flex-direction: column; gap: 40px; }
+h1, h2, h3 { font-family: var(--font-display); margin: 0; text-wrap: balance; line-height: 1.25; }
+p { margin: 0; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
+
+/* header */
+.top { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.emblem {
+  width: 72px; height: 72px; border-radius: 50%; flex: none;
+  background: conic-gradient(var(--green) 0 50%, var(--orange) 50% 100%);
+  border: 4px solid var(--surface); box-shadow: 0 0 0 2px var(--line);
+}
+.top h1 { font-size: clamp(2.4rem, 8vw, 3.8rem); }
+.top .sub { color: var(--muted); letter-spacing: .02em; }
+
+/* views: الصفحة الرئيسية وصفحة اختيار الرئيس */
+.wrap:not([data-view="home"]) .home-only { display: none; }
+.wrap:not([data-view="pres"]) .pres-only { display: none; }
+a.btn { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; color: inherit; }
+a.btn.g { color: var(--on-green); }
+.nav { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* الصفحات الفرعية */
+.page { display: flex; flex-direction: column; gap: 18px; }
+.page h2 { font-size: 1.8rem; }
+.page .lead { color: var(--muted); }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.panel h3 { font-size: 1.1rem; }
+.empty { color: var(--muted); border: 1px dashed var(--line); border-radius: 6px; padding: 14px; text-align: center; margin: 0; }
+.form-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.form-row input, .form-row select { flex: 1 1 140px; min-width: 0; min-height: 44px; border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; background: var(--surface); }
+.form-row .btn { flex: none; }
+.dec { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 14px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.dec:last-child { border-bottom: 0; }
+.dec .num { font-family: var(--font-display); font-weight: 700; color: var(--green); white-space: nowrap; }
+.dec.s .num { color: var(--fg); }
+.dec .txt { min-width: 0; overflow-wrap: anywhere; }
+.dec .when { grid-column: 2; font-size: .8rem; color: var(--muted); }
+.rank { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.rank li { display: grid; grid-template-columns: minmax(84px, 150px) minmax(0, 1fr) auto; gap: 10px; align-items: center; }
+.rank strong { overflow-wrap: anywhere; font-size: .95rem; }
+.track { display: block; height: 12px; border-radius: 999px; background: var(--free); overflow: hidden; }
+.fill { display: block; height: 100%; background: var(--muted); border-radius: 999px; }
+.cnt { font-weight: 700; font-variant-numeric: tabular-nums; }
+.teams { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
+.team.g h3 { color: var(--green); }
+.team.d h3 { color: var(--orange); }
+.slots { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.slot-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--free); }
+.sbtn { cursor: pointer; border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 4px 12px; font-size: .88rem; min-height: 36px; }
+.sbtn:hover { border-color: var(--fg); }
+.record { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.stat { display: flex; flex-direction: column; align-items: center; gap: 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--free); padding: 12px 8px; }
+.stat .lbl { color: var(--muted); font-size: .9rem; }
+.stat .val { font-family: var(--font-display); font-size: 2.6rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.step { display: flex; gap: 8px; }
+.step .sbtn { min-width: 44px; min-height: 44px; font-size: 1.2rem; }
+.back { align-self: flex-start; }
+
+/* nomination */
+.nominate { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 24px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 20px; }
+.nom-photo { display: block; width: 100%; max-width: 280px; justify-self: center; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 6px; border: 1px solid var(--line); }
+.nom-body { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.nom-body h2 { font-size: clamp(1.4rem, 4.5vw, 2rem); }
+.choices { position: relative; min-height: 190px; }
+.choices .yes { display: block; width: 100%; text-align: center; line-height: 1.5; padding-block: 10px; }
+.choices .no { position: absolute; right: 0; top: 96px; transition: left .15s ease, top .15s ease; }
+.verdict { border: 1px solid var(--line); border-inline-start: 4px solid var(--green); background: var(--free); border-radius: 6px; padding: 10px 14px; font-weight: 700; }
+.spy { border: 1px solid var(--line); border-inline-start: 4px solid var(--orange); background: var(--free); border-radius: 6px; padding: 10px 14px; font-weight: 700; }
+
+/* balance + parties */
+.balance { display: flex; flex-direction: column; gap: 16px; }
+.balance h2 { font-size: 1.4rem; }
+.bar { display: flex; height: 56px; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); }
+.bar > div { display: flex; align-items: center; padding-inline: 14px; font-weight: 700; font-variant-numeric: tabular-nums; transition: width .35s ease; min-width: 112px; white-space: nowrap; }
+.bar .g { background: var(--green); color: var(--on-green); }
+.bar .d { background: var(--orange); color: var(--on-orange); justify-content: flex-end; }
+
+.parties { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
+.party { --ring: var(--green); --on-ring: var(--on-green); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.party.d { --ring: var(--orange); --on-ring: var(--on-orange); }
+.party-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.party h3 { font-size: 1.25rem; color: var(--ring); }
+.btn { cursor: pointer; border: 1px solid var(--line); background: var(--free); border-radius: 6px; padding: 6px 14px; font-weight: 600; min-height: 44px; }
+.btn:hover { border-color: var(--fg); }
+.btn.g { background: var(--green); color: var(--on-green); border-color: var(--green); }
+.btn.d { background: var(--orange); color: var(--on-orange); border-color: var(--orange); }
+.btn.no { background: var(--orange); color: var(--on-orange); border-color: var(--orange); }
+
+.members { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 18px 10px; align-items: start; }
+.member { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; min-width: 0; }
+.member img { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; border: 3px solid var(--ring); background: var(--free); }
+.member.pres img { width: 96px; height: 96px; border-width: 4px; }
+.member strong { font-size: .95rem; line-height: 1.35; overflow-wrap: anywhere; }
+.member small { font-size: .8rem; color: var(--muted); line-height: 1.3; }
+.badge { font-size: .75rem; font-weight: 700; padding: 0 10px; border-radius: 999px; background: var(--ring); color: var(--on-ring); }
+
+.indep { display: flex; flex-direction: column; gap: 14px; background: var(--surface); border: 1px dashed var(--line); border-radius: 6px; padding: 14px 16px; }
+.indep-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.indep h3 { font-size: 1.1rem; }
+.members.slim { grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); }
+.ph { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; border: 3px dashed var(--line); background: var(--free); font-family: var(--font-display); font-size: 1.5rem; color: var(--muted); }
+
+/* places */
+.places { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+.place { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 20px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.place header { display: flex; flex-direction: column; gap: 4px; }
+.place h2 { font-size: 1.5rem; }
+.place h3 { font-size: 1.05rem; }
+.place .role { color: var(--muted); font-size: .95rem; }
+.tag { align-self: flex-start; font-size: .8rem; font-weight: 700; letter-spacing: .04em; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--free); color: var(--muted); }
+.note { font-size: .85rem; color: var(--muted); }
+
+.booked { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; background: var(--green); color: var(--on-green); border-radius: 6px; padding: 12px 16px; }
+.booked small { font-size: .82rem; opacity: .9; }
+.booked strong { font-family: var(--font-display); font-size: 1.5rem; line-height: 1.2; }
+.booked .col { display: flex; flex-direction: column; }
+
+/* requests */
+.reqs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.req { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 10px; border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px; background: var(--free); }
+.req .rt { min-width: 0; overflow-wrap: anywhere; flex: 1 1 140px; }
+.req.no .rt { text-decoration: line-through; color: var(--muted); }
+.seg { display: flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--surface); }
+.seg button { cursor: pointer; border: 0; border-inline-start: 1px solid var(--line); background: transparent; padding: 4px 12px; min-height: 36px; font-size: .88rem; white-space: nowrap; }
+.seg button:first-child { border-inline-start: 0; }
+.seg button:hover { background: var(--free); }
+.seg button[aria-pressed="true"] { background: var(--fg); color: var(--bg); font-weight: 700; }
+.add { display: flex; gap: 8px; flex-wrap: wrap; }
+.add input { flex: 1 1 160px; min-width: 0; min-height: 44px; border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; background: var(--bg); }
+
+/* constitution */
+.const { display: flex; flex-direction: column; gap: 14px; }
+.const h2 { font-size: 1.4rem; }
+.const ol { margin: 0; padding: 0; list-style: none; counter-reset: art; display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.const li { counter-increment: art; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.const li::before { content: "مادة " counter(art); font-family: var(--font-display); font-weight: 700; color: var(--green); white-space: nowrap; }
+footer { text-align: center; }
+
+@media (max-width: 680px) {
+  .places, .parties, .nominate, .teams { grid-template-columns: minmax(0, 1fr); }
+  .nom-photo { max-width: 220px; }
+}
+@media (prefers-reduced-motion: reduce) { .bar > div, .choices .no { transition: none; } }
+</style>
+
+<div class="wrap" lang="ar" dir="rtl" data-view="home">
+
+  <header class="top home-only">
+    <div class="emblem" aria-hidden="true"></div>
+    <div>
+      <h1>دولة الجوامعة</h1>
+      <p class="sub">حزبان · مكانان · وقهوة بتحل كل حاجة</p>
+    </div>
+  </header>
+
+  <nav class="nav home-only" aria-label="صفحات الدولة">
+    <a class="btn g" href="#president">اختيار رئيس</a>
+    <a class="btn" href="#decisions">القرارات الرئاسية</a>
+    <a class="btn" href="#shame">لوحة العار</a>
+    <a class="btn" href="#schedule">جدول الحجوزات</a>
+  </nav>
+
+  <a class="btn back pres-only" href="#home">رجوع للدولة</a>
+
+  <section class="nominate pres-only" aria-labelledby="nom-title">
+    <img class="nom-photo" src="img/president.jpg" alt="صورة المرشح لرئاسة الدولة" width="480" height="600">
+    <div class="nom-body">
+      <span class="tag">ترشيح رئيس الدولة</span>
+      <h2 id="nom-title">هل تقبل باعما جومعا رئيساً للدولة؟</h2>
+      <div class="choices" id="choices">
+        <button class="btn g yes" id="yes" type="button">اه طبعا اقبل بالفحل اعما جومعا</button>
+        <button class="btn no" id="no" type="button">احا مش موافق</button>
+      </div>
+      <p class="verdict" id="yesMsg" hidden>تم تسجيل موافقتك. مبروك للرئيس.</p>
+      <p class="spy" id="spyMsg" role="alert" hidden>تم تحديد الجاسوس. سيتم إرسال بياناتك ومناقشة استئصال خصاويك وبيعهم وشراء علبة LM للمغواري.</p>
+    </div>
+  </section>
+
+  <section class="balance home-only" aria-labelledby="bal-title">
+    <h2 id="bal-title">ميزان الأحزاب</h2>
+    <div class="bar" role="img" aria-label="نتيجة الأحزاب الحالية" id="bar">
+      <div class="g" id="barG"></div>
+      <div class="d" id="barD"></div>
+    </div>
+
+    <div class="parties">
+      <article class="party g">
+        <div class="party-head">
+          <h3>حزب الجوامعة</h3>
+          <button class="btn g" id="addG" type="button">+ نقطة</button>
+        </div>
+        <ul class="members">
+          <li class="member pres">
+            <img src="img/gom3a.jpg" alt="اعما جومعا" width="96" height="96">
+            <strong>اعما جومعا</strong>
+            <span class="badge">رئيس الدولة</span>
+          </li>
+          <li class="member">
+            <img src="img/prince.jpg" alt="البرنس" width="84" height="84">
+            <strong>البرنس</strong>
+          </li>
+          <li class="member">
+            <img src="img/ismail.jpg" alt="اصمايل" width="84" height="84">
+            <strong>اصمايل</strong>
+          </li>
+          <li class="member">
+            <img src="img/donjol.jpg" alt="دونجل" width="84" height="84">
+            <strong>دونجل</strong>
+          </li>
+        </ul>
+      </article>
+
+      <article class="party d">
+        <div class="party-head">
+          <h3>حزب الدولية</h3>
+          <button class="btn d" id="addD" type="button">+ نقطة</button>
+        </div>
+        <ul class="members">
+          <li class="member">
+            <img src="img/joo.jpg" alt="الشيخ joo" width="84" height="84">
+            <strong>الشيخ joo</strong>
+          </li>
+          <li class="member">
+            <img src="img/moalem.jpg" alt="المعلم احما المغواري" width="84" height="84">
+            <strong>المعلم احما المغواري</strong>
+          </li>
+          <li class="member">
+            <img src="img/dawli-kebir.jpg" alt="الدولي الكبير" width="84" height="84">
+            <strong>الدولي الكبير</strong>
+          </li>
+          <li class="member">
+            <img src="img/sa3dan.jpg" alt="صعضن" width="84" height="84">
+            <strong>صعضن</strong>
+            <small>الدولي الصغير</small>
+          </li>
+          <li class="member">
+            <img src="img/abdo.jpg" alt="عابضو" width="84" height="84">
+            <strong>عابضو</strong>
+          </li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="indep">
+      <div class="indep-head">
+        <h3>مستقلين</h3>
+        <p class="note">لحد ما يحددوا حزبهم</p>
+      </div>
+      <ul class="members slim">
+        <li class="member"><span class="ph" aria-hidden="true">م</span><strong>ماهر</strong></li>
+        <li class="member"><span class="ph" aria-hidden="true">ع</span><strong>عمار</strong></li>
+        <li class="member"><span class="ph" aria-hidden="true">ا</span><strong>احما ناجح</strong></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="places home-only" aria-label="أماكن الدولة">
+
+    <article class="place">
+      <header>
+        <span class="tag">مقر الحجوزات والمناوشات</span>
+        <h2>ملعب البوابة</h2>
+        <p class="role">هنا بنحجز، وهنا الأحزاب بتتناوش.</p>
+      </header>
+      <div class="booked">
+        <div class="col">
+          <small>الحجز المثبت</small>
+          <strong>الاتنين · 9 م</strong>
+        </div>
+      </div>
+      <h3>الطلبات</h3>
+      <ul class="reqs" id="stadiumReqs"></ul>
+    </article>
+
+    <article class="place">
+      <header>
+        <span class="tag">مقر الصلح والتشجيع والنقاش</span>
+        <h2>قهوة ميلانو</h2>
+        <p class="role">أي خلاف بيتحل هنا وفي الجروب.</p>
+      </header>
+      <h3>طاولة الخلافات</h3>
+      <ul class="reqs" id="cafeReqs"></ul>
+      <form class="add" id="addForm">
+        <input id="topicInput" type="text" placeholder="طلب موضوع للمناقشة" maxlength="80" aria-label="طلب موضوع للمناقشة">
+        <button class="btn" type="submit">قدّم الطلب</button>
+      </form>
+      <p class="note">تتم مراجعة الطلبات من الرئيس اعما جومعا.</p>
+    </article>
+
+  </section>
+
+  <section class="const home-only" aria-labelledby="const-title">
+    <h2 id="const-title">دستور الجوامعة</h2>
+    <ol>
+      <li>الجوامعة دولة واحدة بحزبين، وأي خلاف بيتحل في الجروب وفي القهوة.</li>
+      <li>ملعب البوابة للحجز والمناوشات، وميلانو للصلح والتشجيع والنقاش.</li>
+      <li>اللي يتأخر في دفع فلوس الحجز يتم خصيه.</li>
+      <li>الحكم رأيه نافذ مرة واحدة، والاعتراض بيتأجل لجلسة ميلانو.</li>
+      <li>مفيش خلاف يعدي أكتر من قعدتين.</li>
+      <li>اللي ميجيش الحجز مشكوك في ميوله.</li>
+    </ol>
+  </section>
+
+  <div class="page" data-page="decisions" hidden>
+    <a class="btn back" href="#home">رجوع للدولة</a>
+    <header>
+      <h2>القرارات الرئاسية</h2>
+      <p class="lead">الجريدة الرسمية لدولة الجوامعة. كل قرار بيصدر من الرئيس اعما جومعا.</p>
+    </header>
+    <form class="form-row" id="decForm">
+      <input id="decInput" type="text" placeholder="نص القرار" maxlength="120" aria-label="نص القرار">
+      <button class="btn g" type="submit">أصدر القرار</button>
+    </form>
+    <div class="panel" id="decList"></div>
+    <p class="note">القرارات بتتحفظ على جهازك بس لحد ما نخليها مشتركة.</p>
+  </div>
+
+  <div class="page" data-page="shame" hidden>
+    <a class="btn back" href="#home">رجوع للدولة</a>
+    <header>
+      <h2>لوحة العار</h2>
+      <p class="lead">اللي يغلط اسمه بيتكتب هنا.</p>
+    </header>
+    <form class="form-row" id="shameForm">
+      <select id="shameName" aria-label="الاسم"></select>
+      <input id="shameReason" type="text" placeholder="عمل إيه؟" maxlength="80" aria-label="السبب">
+      <button class="btn" type="submit">سجّل</button>
+    </form>
+    <div class="panel" id="shameRankPanel">
+      <h3>ترتيب العار</h3>
+      <ul class="rank" id="shameRank"></ul>
+    </div>
+    <div class="panel">
+      <h3>السجل</h3>
+      <div id="shameLog"></div>
+    </div>
+    <p class="note">اللوحة بتتحفظ على جهازك بس لحد ما نخليها مشتركة.</p>
+  </div>
+
+  <div class="page" data-page="schedule" hidden>
+    <a class="btn back" href="#home">رجوع للدولة</a>
+    <header>
+      <h2>جدول الحجوزات</h2>
+      <p class="lead">ملعب البوابة · سجل الفوز والخسارة لكل فرقة.</p>
+    </header>
+    <div class="booked">
+      <div class="col">
+        <small>الحجز المثبت</small>
+        <strong>الاتنين · 9 م</strong>
+      </div>
+    </div>
+    <div class="teams">
+      <section class="panel team g" aria-label="سجل فرقة الجوامعة">
+        <h3>فرقة الجوامعة</h3>
+        <div class="record">
+          <div class="stat">
+            <span class="lbl">فوز</span>
+            <strong class="val" id="recGW">0</strong>
+            <div class="step">
+              <button class="sbtn" type="button" data-k="gw" data-d="1" aria-label="زوّد فوز للجوامعة">+</button>
+              <button class="sbtn" type="button" data-k="gw" data-d="-1" aria-label="نقّص فوز من الجوامعة">−</button>
+            </div>
+          </div>
+          <div class="stat">
+            <span class="lbl">خسارة</span>
+            <strong class="val" id="recGL">0</strong>
+            <div class="step">
+              <button class="sbtn" type="button" data-k="gl" data-d="1" aria-label="زوّد خسارة للجوامعة">+</button>
+              <button class="sbtn" type="button" data-k="gl" data-d="-1" aria-label="نقّص خسارة من الجوامعة">−</button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="panel team d" aria-label="سجل فرقة الدولية">
+        <h3>فرقة الدولية</h3>
+        <div class="record">
+          <div class="stat">
+            <span class="lbl">فوز</span>
+            <strong class="val" id="recDW">0</strong>
+            <div class="step">
+              <button class="sbtn" type="button" data-k="dw" data-d="1" aria-label="زوّد فوز للدولية">+</button>
+              <button class="sbtn" type="button" data-k="dw" data-d="-1" aria-label="نقّص فوز من الدولية">−</button>
+            </div>
+          </div>
+          <div class="stat">
+            <span class="lbl">خسارة</span>
+            <strong class="val" id="recDL">0</strong>
+            <div class="step">
+              <button class="sbtn" type="button" data-k="dl" data-d="1" aria-label="زوّد خسارة للدولية">+</button>
+              <button class="sbtn" type="button" data-k="dl" data-d="-1" aria-label="نقّص خسارة من الدولية">−</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <p class="note">الأرقام بتتحفظ على جهازك بس لحد ما نخليها مشتركة.</p>
+  </div>
+
+  <footer class="note home-only">قول للرايس لو عندك اقتراحات للسايت.</footer>
+</div>
+
+<script>
+(function () {
+  var KEY = "gowama3a-v2";
+  var STADIUM = [
+    { id: "s1", t: "طلب ساعة أخرى" },
+    { id: "s2", t: "فريق عايز يلاعبنا" },
+    { id: "s3", t: "الحضري كلمني" }
+  ];
+  var CAFE = [
+    { id: "c1", t: "طلب حجز ساعة" },
+    { id: "c2", t: "طلب قعدة على القهوة" },
+    { id: "c3", t: "طلب نزولة ازنجريه" }
+  ];
+  var CHOICES = [["قبول", 1], ["رفض", 2], ["لسه مقررتش", 0]];
+  var st = { g: 1, d: 2, status: {}, topics: [] };
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (raw) {
+      var p = JSON.parse(raw);
+      if (p && typeof p.g === "number" && p.status && p.topics) st = p;
+    }
+  } catch (e) {}
+  st.decisions = st.decisions || [];
+  st.shame = st.shame || [];
+  st.bookings = st.bookings || [];
+  st.record = st.record || { gw: 0, gl: 0, dw: 0, dl: 0 };
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+
+  function renderBar() {
+    var total = st.g + st.d || 1;
+    var gp = Math.round((st.g / total) * 100);
+    var g = document.getElementById("barG"), d = document.getElementById("barD");
+    g.style.width = gp + "%";
+    d.style.width = (100 - gp) + "%";
+    g.textContent = "الجوامعة " + st.g;
+    d.textContent = "الدولية " + st.d;
+    document.getElementById("bar").setAttribute("aria-label", "الجوامعة " + st.g + " والدولية " + st.d);
+  }
+
+  function setStatus(id, v) {
+    if (v) st.status[id] = v; else delete st.status[id];
+    save(); renderAll();
+  }
+  function renderList(ulId, items) {
+    var ul = document.getElementById(ulId);
+    ul.textContent = "";
+    items.forEach(function (it) {
+      var s = st.status[it.id] || 0;
+      var li = document.createElement("li");
+      li.className = "req" + (s === 1 ? " ok" : s === 2 ? " no" : "");
+      var rt = document.createElement("span"); rt.className = "rt"; rt.textContent = it.t;
+      var seg = document.createElement("span"); seg.className = "seg";
+      seg.setAttribute("role", "group");
+      seg.setAttribute("aria-label", "القرار: " + it.t);
+      CHOICES.forEach(function (o) {
+        var b = document.createElement("button");
+        b.type = "button"; b.textContent = o[0];
+        b.setAttribute("aria-pressed", s === o[1] ? "true" : "false");
+        b.addEventListener("click", function () { setStatus(it.id, o[1]); });
+        seg.appendChild(b);
+      });
+      li.appendChild(rt); li.appendChild(seg);
+      ul.appendChild(li);
+    });
+  }
+  function renderAll() {
+    renderList("stadiumReqs", STADIUM);
+    var cafe = CAFE.slice();
+    st.topics.forEach(function (t, i) { cafe.push({ id: "t" + i, t: "موضوع للمناقشة: " + t }); });
+    renderList("cafeReqs", cafe);
+  }
+
+  document.getElementById("addG").addEventListener("click", function () { st.g++; save(); renderBar(); });
+  document.getElementById("addD").addEventListener("click", function () { st.d++; save(); renderBar(); });
+  document.getElementById("addForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var inp = document.getElementById("topicInput");
+    var v = inp.value.trim();
+    if (!v) return;
+    st.topics.push(v);
+    inp.value = "";
+    save(); renderAll();
+  });
+
+  /* ترشيح الرئيس: الاختيار التاني بيهرب */
+  var choices = document.getElementById("choices");
+  var yes = document.getElementById("yes");
+  var no = document.getElementById("no");
+  var yesMsg = document.getElementById("yesMsg");
+  var spyMsg = document.getElementById("spyMsg");
+
+  function flee(px, py) {
+    var box = choices.getBoundingClientRect();
+    var bw = no.offsetWidth, bh = no.offsetHeight;
+    var maxX = Math.max(0, box.width - bw);
+    var maxY = Math.max(0, box.height - bh);
+    var minY = Math.min(maxY, yes.offsetHeight + 12);
+    var best = { x: 0, y: minY }, bestD = -1;
+    for (var i = 0; i < 14; i++) {
+      var x = Math.random() * maxX;
+      var y = minY + Math.random() * (maxY - minY);
+      var d = px == null ? 1 : Math.hypot(x + bw / 2 - px, y + bh / 2 - py);
+      if (d > bestD) { bestD = d; best = { x: x, y: y }; }
+    }
+    no.style.right = "auto";
+    no.style.left = best.x + "px";
+    no.style.top = best.y + "px";
+  }
+  function pointerPos(e) {
+    var box = choices.getBoundingClientRect();
+    return [e.clientX - box.left, e.clientY - box.top];
+  }
+  choices.addEventListener("pointermove", function (e) {
+    var pos = pointerPos(e);
+    var r = no.getBoundingClientRect(), box = choices.getBoundingClientRect();
+    var cx = r.left - box.left + r.width / 2, cy = r.top - box.top + r.height / 2;
+    if (Math.hypot(pos[0] - cx, pos[1] - cy) < 90) flee(pos[0], pos[1]);
+  });
+  no.addEventListener("pointerdown", function (e) {
+    var pos = pointerPos(e);
+    flee(pos[0], pos[1]);
+  });
+  no.addEventListener("click", function () {
+    yesMsg.hidden = true;
+    spyMsg.hidden = false;
+  });
+  yes.addEventListener("click", function () {
+    spyMsg.hidden = true;
+    yesMsg.hidden = false;
+  });
+
+  /* الصفحتين: الرئيسية و #president */
+  var wrap = document.querySelector(".wrap");
+  function route() {
+    var h = (location.hash || "").replace("#", "");
+    var VIEWS = { president: "pres", decisions: "decisions", shame: "shame", schedule: "schedule" };
+    var v = VIEWS[h] || "home";
+    wrap.setAttribute("data-view", v);
+    var pages = document.querySelectorAll(".page");
+    for (var i = 0; i < pages.length; i++) pages[i].hidden = pages[i].getAttribute("data-page") !== v;
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+  window.addEventListener("hashchange", route);
+  route();
+
+  /* القرارات ولوحة العار وجدول الحجوزات */
+  var DAYS = ["السبت", "الأحد", "الاتنين", "التلات", "الأربع", "الخميس", "الجمعة"];
+  var HOURS = ["4 م", "5 م", "6 م", "7 م", "8 م", "9 م", "10 م", "11 م", "12 ص"];
+  var GROUPS = [
+    ["الجوامعة", ["اعما جومعا", "البرنس", "اصمايل", "دونجل"]],
+    ["الدولية", ["الشيخ joo", "المعلم احما المغواري", "الدولي الكبير", "صعضن", "عابضو"]],
+    ["مستقلين", ["ماهر", "عمار", "احما ناجح"]]
+  ];
+  var PINNED = { day: "الاتنين", hour: "9 م" };
+
+  function el(tag, cls, txt) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (txt != null) e.textContent = txt;
+    return e;
+  }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+  function fmtDate(ts) {
+    try { return new Date(ts).toLocaleDateString("ar-EG", { day: "numeric", month: "long" }); } catch (e) { return ""; }
+  }
+  function fillSelect(id, arr) {
+    var sel = document.getElementById(id);
+    arr.forEach(function (x) {
+      var o = document.createElement("option");
+      o.value = x; o.textContent = x;
+      sel.appendChild(o);
+    });
+  }
+  (function () {
+    var sel = document.getElementById("shameName");
+    GROUPS.forEach(function (g) {
+      var og = document.createElement("optgroup");
+      og.label = g[0];
+      g[1].forEach(function (n) {
+        var o = document.createElement("option");
+        o.value = n; o.textContent = n;
+        og.appendChild(o);
+      });
+      sel.appendChild(og);
+    });
+  })();
+
+  function renderDecisions() {
+    var box = document.getElementById("decList");
+    box.textContent = "";
+    if (!st.decisions.length) {
+      box.appendChild(el("p", "empty", "لسه مفيش قرارات. الرئيس لسه ما أصدرش أول قرار."));
+      return;
+    }
+    for (var i = st.decisions.length - 1; i >= 0; i--) {
+      var d = st.decisions[i];
+      var row = el("div", "dec");
+      row.appendChild(el("span", "num", "قرار رقم " + (i + 1)));
+      row.appendChild(el("span", "txt", d.t));
+      row.appendChild(el("span", "when", fmtDate(d.ts)));
+      box.appendChild(row);
+    }
+  }
+
+  function renderShame() {
+    var rank = document.getElementById("shameRank");
+    var panel = document.getElementById("shameRankPanel");
+    var log = document.getElementById("shameLog");
+    rank.textContent = ""; log.textContent = "";
+    if (!st.shame.length) {
+      panel.hidden = true;
+      log.appendChild(el("p", "empty", "لوحة العار فاضية. الدولة مثالية لحد دلوقتي."));
+      return;
+    }
+    panel.hidden = false;
+    var counts = {};
+    st.shame.forEach(function (s) { counts[s.n] = (counts[s.n] || 0) + 1; });
+    var names = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; });
+    var max = counts[names[0]];
+    names.forEach(function (n) {
+      var li = el("li");
+      li.appendChild(el("strong", null, n));
+      var tr = el("span", "track");
+      var f = el("span", "fill");
+      f.style.width = Math.round((counts[n] / max) * 100) + "%";
+      tr.appendChild(f);
+      li.appendChild(tr);
+      li.appendChild(el("span", "cnt", String(counts[n])));
+      rank.appendChild(li);
+    });
+    for (var i = st.shame.length - 1; i >= 0; i--) {
+      var s = st.shame[i];
+      var row = el("div", "dec s");
+      row.appendChild(el("span", "num", s.n));
+      row.appendChild(el("span", "txt", s.r));
+      row.appendChild(el("span", "when", fmtDate(s.ts)));
+      log.appendChild(row);
+    }
+  }
+
+  function renderRecord() {
+    var m = { recGW: "gw", recGL: "gl", recDW: "dw", recDL: "dl" };
+    Object.keys(m).forEach(function (id) {
+      document.getElementById(id).textContent = String(st.record[m[id]] || 0);
+    });
+  }
+
+  document.getElementById("decForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var inp = document.getElementById("decInput");
+    var v = inp.value.trim();
+    if (!v) return;
+    st.decisions.push({ t: v, ts: Date.now() });
+    inp.value = "";
+    save(); renderDecisions();
+  });
+  document.getElementById("shameForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var n = document.getElementById("shameName").value;
+    var inp = document.getElementById("shameReason");
+    var r = inp.value.trim();
+    if (!n || !r) return;
+    st.shame.push({ n: n, r: r, ts: Date.now() });
+    inp.value = "";
+    save(); renderShame();
+  });
+  document.querySelector('[data-page="schedule"]').addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest("button[data-k]") : null;
+    if (!b) return;
+    var k = b.getAttribute("data-k");
+    var d = parseInt(b.getAttribute("data-d"), 10) || 0;
+    st.record[k] = Math.max(0, (st.record[k] || 0) + d);
+    save(); renderRecord();
+  });
+
+  renderBar(); renderAll(); renderDecisions(); renderShame(); renderRecord();
+})();
+</script>
+
+</body></html>
