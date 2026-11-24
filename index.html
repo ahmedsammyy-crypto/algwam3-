@@ -336,6 +336,8 @@ body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-e
 
 <div class="wrap" lang="ar" dir="rtl" data-view="home">
 
+  <p class="spy" id="netErr" role="alert" hidden>مش قادر أتصل بالسيرفر. تأكد من النت، وإن قواعد Firestore اتنشرت (Publish).</p>
+
   <section class="hero home-only">
     <video class="hero-video" id="heroVideo" src="video/hero.mp4" poster="video/hero-poster.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1"></video>
     <header class="top">
@@ -514,7 +516,7 @@ body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-e
       <button class="btn g" type="submit">أصدر القرار</button>
     </form>
     <div class="panel" id="decList"></div>
-    <p class="note">القرارات بتتحفظ على جهازك بس لحد ما نخليها مشتركة.</p>
+    <p class="note">القرارات متشاركة مع كل الجروب.</p>
   </div>
 
   <div class="page" data-page="shame" hidden>
@@ -536,7 +538,7 @@ body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-e
       <h3>السجل</h3>
       <div id="shameLog"></div>
     </div>
-    <p class="note">اللوحة بتتحفظ على جهازك بس لحد ما نخليها مشتركة.</p>
+    <p class="note">اللوحة متشاركة مع كل الجروب.</p>
   </div>
 
   <div class="page" data-page="schedule" hidden>
@@ -596,7 +598,7 @@ body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-e
         </div>
       </section>
     </div>
-    <p class="note">الأرقام بتتحفظ على جهازك بس لحد ما نخليها مشتركة.</p>
+    <p class="note">الأرقام متشاركة مع كل الجروب.</p>
   </div>
 
   <div class="page" data-page="memes" hidden>
@@ -609,17 +611,18 @@ body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-e
       <input class="vh" id="memeFile" type="file" accept="image/*" multiple>
       <label class="btn g filebtn" for="memeFile">+ ضيف ميم</label>
     </div>
-    <p class="spy" id="memeErr" role="alert" hidden>مفيش مكان كفاية على جهازك. امسح كام ميم وجرب تاني.</p>
+    <p class="spy" id="memeErr" role="alert" hidden>الميم ماترفعش. جرب صورة تانية أو تأكد من النت.</p>
     <div class="memes" id="memeGrid"></div>
-    <p class="note">الميمز اللي بتضيفها بتتحفظ على جهازك بس. قول للرايس يضيف ميمز ثابتة تظهر للكل.</p>
+    <p class="note">الميمز اللي بتضيفها بتظهر لكل الجروب.</p>
   </div>
 
   <footer class="note home-only">قول للرايس لو عندك اقتراحات للسايت.</footer>
 </div>
 
-<script>
+<script type="module">
+import { addItem, listenItems, removeItem, listenDoc, bump, mergeDoc } from "./firebase.js";
+
 (function () {
-  var KEY = "gowama3a-v2";
   var STADIUM = [
     { id: "s1", t: "طلب ساعة أخرى" },
     { id: "s2", t: "فريق عايز يلاعبنا" },
@@ -631,37 +634,39 @@ body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-e
     { id: "c3", t: "طلب نزولة ازنجريه" }
   ];
   var CHOICES = [["قبول", 1], ["رفض", 2], ["لسه مقررتش", 0]];
-  var st = { g: 1, d: 2, status: {}, topics: [] };
-  try {
-    var raw = localStorage.getItem(KEY);
-    if (raw) {
-      var p = JSON.parse(raw);
-      if (p && typeof p.g === "number" && p.status && p.topics) st = p;
-    }
-  } catch (e) {}
-  st.decisions = st.decisions || [];
-  st.shame = st.shame || [];
-  st.bookings = st.bookings || [];
-  st.record = st.record || { gw: 0, gl: 0, dw: 0, dl: 0 };
-  st.memes = st.memes || [];
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  var BASE = { g: 1, d: 2 };
+  var st = {
+    pts: { g: 0, d: 0 }, status: {}, topics: [], decisions: [], shame: [],
+    record: { gw: 0, gl: 0, dw: 0, dl: 0 }, memes: []
+  };
+
+  function showNetErr(e) {
+    try { console.error(e); } catch (x) {}
+    var b = document.getElementById("netErr");
+    if (b) b.hidden = false;
+  }
+  function guard(p) { if (p && p.catch) p.catch(showNetErr); return p; }
+  function tsOf(x) {
+    try { return x.createdAt && x.createdAt.toMillis ? x.createdAt.toMillis() : Date.now(); } catch (e) { return Date.now(); }
+  }
 
   function renderBar() {
-    var total = st.g + st.d || 1;
-    var gp = Math.round((st.g / total) * 100);
+    var G = BASE.g + (st.pts.g || 0), D = BASE.d + (st.pts.d || 0);
+    var total = G + D || 1;
+    var gp = Math.round((G / total) * 100);
     var g = document.getElementById("barG"), d = document.getElementById("barD");
     g.style.width = gp + "%";
     d.style.width = (100 - gp) + "%";
     var barEl = document.getElementById("bar");
     barEl.style.setProperty("--split", Math.max(gp, 18) > 82 ? "82%" : Math.max(gp, 18) + "%");
-    g.textContent = "الجوامعة " + st.g;
-    d.textContent = "الدولية " + st.d;
-    document.getElementById("bar").setAttribute("aria-label", "الجوامعة " + st.g + " والدولية " + st.d);
+    g.textContent = "الجوامعة " + G;
+    d.textContent = "الدولية " + D;
+    barEl.setAttribute("aria-label", "الجوامعة " + G + " والدولية " + D);
   }
 
   function setStatus(id, v) {
-    if (v) st.status[id] = v; else delete st.status[id];
-    save(); renderAll();
+    var o = {}; o[id] = v;
+    guard(mergeDoc("requests", "status", { status: o }));
   }
   function renderList(ulId, items) {
     var ul = document.getElementById(ulId);
@@ -688,20 +693,19 @@ body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-e
   function renderAll() {
     renderList("stadiumReqs", STADIUM);
     var cafe = CAFE.slice();
-    st.topics.forEach(function (t, i) { cafe.push({ id: "t" + i, t: "موضوع للمناقشة: " + t }); });
+    st.topics.forEach(function (t) { cafe.push({ id: "t_" + t.id, t: "موضوع للمناقشة: " + t.t }); });
     renderList("cafeReqs", cafe);
   }
 
-  document.getElementById("addG").addEventListener("click", function () { st.g++; save(); renderBar(); });
-  document.getElementById("addD").addEventListener("click", function () { st.d++; save(); renderBar(); });
+  document.getElementById("addG").addEventListener("click", function () { guard(bump("matches", "points", "g", 1)); });
+  document.getElementById("addD").addEventListener("click", function () { guard(bump("matches", "points", "d", 1)); });
   document.getElementById("addForm").addEventListener("submit", function (e) {
     e.preventDefault();
     var inp = document.getElementById("topicInput");
     var v = inp.value.trim();
     if (!v) return;
-    st.topics.push(v);
     inp.value = "";
-    save(); renderAll();
+    guard(addItem("requests", { t: v }));
   });
 
   /* ترشيح الرئيس: الاختيار التاني بيهرب */
@@ -775,14 +779,11 @@ body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-e
   route();
 
   /* القرارات ولوحة العار وجدول الحجوزات */
-  var DAYS = ["السبت", "الأحد", "الاتنين", "التلات", "الأربع", "الخميس", "الجمعة"];
-  var HOURS = ["4 م", "5 م", "6 م", "7 م", "8 م", "9 م", "10 م", "11 م", "12 ص"];
   var GROUPS = [
     ["الجوامعة", ["اعما جومعا", "البرنس", "اصمايل", "دونجل"]],
     ["الدولية", ["الشيخ joo", "المعلم احما المغواري", "الدولي الكبير", "صعضن", "عابضو"]],
     ["مستقلين", ["ماهر", "عمار", "احما ناجح"]]
   ];
-  var PINNED = { day: "الاتنين", hour: "9 م" };
 
   function el(tag, cls, txt) {
     var e = document.createElement(tag);
@@ -790,17 +791,8 @@ body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-e
     if (txt != null) e.textContent = txt;
     return e;
   }
-  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
   function fmtDate(ts) {
     try { return new Date(ts).toLocaleDateString("ar-EG", { day: "numeric", month: "long" }); } catch (e) { return ""; }
-  }
-  function fillSelect(id, arr) {
-    var sel = document.getElementById(id);
-    arr.forEach(function (x) {
-      var o = document.createElement("option");
-      o.value = x; o.textContent = x;
-      sel.appendChild(o);
-    });
   }
   (function () {
     var sel = document.getElementById("shameName");
@@ -881,9 +873,8 @@ body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-e
     var inp = document.getElementById("decInput");
     var v = inp.value.trim();
     if (!v) return;
-    st.decisions.push({ t: v, ts: Date.now() });
     inp.value = "";
-    save(); renderDecisions();
+    guard(addItem("decrees", { t: v }));
   });
   document.getElementById("shameForm").addEventListener("submit", function (e) {
     e.preventDefault();
@@ -891,20 +882,19 @@ body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-e
     var inp = document.getElementById("shameReason");
     var r = inp.value.trim();
     if (!n || !r) return;
-    st.shame.push({ n: n, r: r, ts: Date.now() });
     inp.value = "";
-    save(); renderShame();
+    guard(addItem("shame", { n: n, r: r }));
   });
   document.querySelector('[data-page="schedule"]').addEventListener("click", function (e) {
     var b = e.target.closest ? e.target.closest("button[data-k]") : null;
     if (!b) return;
     var k = b.getAttribute("data-k");
     var d = parseInt(b.getAttribute("data-d"), 10) || 0;
-    st.record[k] = Math.max(0, (st.record[k] || 0) + d);
-    save(); renderRecord();
+    if ((st.record[k] || 0) + d < 0) return;
+    guard(bump("matches", "record", k, d));
   });
 
-  /* ميمز الجروب: الثابتة في BUILTIN بتظهر للكل، واللي بتضيفها بتتحفظ على جهازك */
+  /* ميمز الجروب: الثابتة في BUILTIN، واللي بتضيفها بتتحفظ على السيرفر وتظهر للكل */
   var BUILTIN = [
     { type: "video", src: "video/meme1.mp4", poster: "video/meme1-poster.jpg", alt: "ميم فيديو من الجروب" }
   ];
@@ -926,12 +916,12 @@ body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-e
       }
       g.appendChild(f); n++;
     });
-    st.memes.forEach(function (m, i) {
+    st.memes.forEach(function (m) {
       var f = el("figure", "meme");
       var im = el("img"); im.src = m.d; im.alt = "ميم من الجروب"; im.loading = "lazy";
       var x = el("button", "x", "✕");
       x.type = "button"; x.setAttribute("aria-label", "امسح الميم");
-      x.addEventListener("click", function () { st.memes.splice(i, 1); save(); renderMemes(); });
+      x.addEventListener("click", function () { guard(removeItem("memes", m.id)); });
       f.appendChild(im); f.appendChild(x); g.appendChild(f); n++;
     });
     if (!n) g.appendChild(el("p", "empty", "لسه مفيش ميمز. ضيف أول ميم."));
@@ -961,18 +951,39 @@ body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-e
     var inp = e.target;
     (function next() {
       var f = files.shift();
-      if (!f) { inp.value = ""; renderMemes(); return; }
+      if (!f) { inp.value = ""; return; }
       shrink(f, function (d) {
-        if (d) {
-          st.memes.push({ d: d });
-          var ok = true;
-          try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (x) { ok = false; }
-          if (!ok) { st.memes.pop(); err.hidden = false; files = []; }
-        }
-        next();
+        if (!d || d.length > 900000) { err.hidden = false; next(); return; }
+        addItem("memes", { d: d }).then(next, function (x) {
+          showNetErr(x); err.hidden = false; files = []; next();
+        });
       });
     })();
   });
+
+  /* الاستماع للسيرفر: أي تغيير عند أي حد بيظهر عند الكل لحظياً */
+  listenDoc("matches", "points", function (d) { st.pts = { g: d.g || 0, d: d.d || 0 }; renderBar(); }, showNetErr);
+  listenDoc("matches", "record", function (d) {
+    st.record = { gw: d.gw || 0, gl: d.gl || 0, dw: d.dw || 0, dl: d.dl || 0 };
+    renderRecord();
+  }, showNetErr);
+  listenDoc("requests", "status", function (d) { st.status = d.status || {}; renderAll(); }, showNetErr);
+  listenItems("requests", function (items) {
+    st.topics = items.slice().reverse().map(function (x) { return { id: x.id, t: x.t }; });
+    renderAll();
+  }, showNetErr);
+  listenItems("decrees", function (items) {
+    st.decisions = items.slice().reverse().map(function (x) { return { t: x.t, ts: tsOf(x) }; });
+    renderDecisions();
+  }, showNetErr);
+  listenItems("shame", function (items) {
+    st.shame = items.slice().reverse().map(function (x) { return { n: x.n, r: x.r, ts: tsOf(x) }; });
+    renderShame();
+  }, showNetErr);
+  listenItems("memes", function (items) {
+    st.memes = items.map(function (x) { return { id: x.id, d: x.d }; });
+    renderMemes();
+  }, showNetErr);
 
   renderBar(); renderAll(); renderDecisions(); renderShame(); renderRecord(); renderMemes();
 })();
