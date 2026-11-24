@@ -1,4 +1,5 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>دولة الجوامعة</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Reem+Kufi:wght@500;700&display=swap">
@@ -15,6 +16,14 @@
   --orange: #c4421f;
   --on-orange: #ffffff;
   --free: #e8ede8;
+  --glass: rgba(255,255,255,.58);
+  --glass-2: rgba(255,255,255,.42);
+  --glass-edge: rgba(255,255,255,.78);
+  --glass-hi: rgba(255,255,255,.95);
+  --glass-shadow: 0 12px 36px rgba(20,48,34,.14);
+  --blob1: rgba(31,122,79,.42);
+  --blob2: rgba(224,96,56,.36);
+  --blob3: rgba(48,150,176,.30);
   --font-display: "Reem Kufi", "Cairo", "Segoe UI", Tahoma, sans-serif;
   --font-body: "Cairo", "Segoe UI", Tahoma, sans-serif;
 }
@@ -22,12 +31,16 @@
   :root:not([data-theme="light"]) {
     --bg: #0f1612; --surface: #17211b; --fg: #e9efe9; --muted: #9aab9f; --line: #2a382f;
     --green: #3fb37a; --on-green: #0b130f; --orange: #f07a55; --on-orange: #1a0b06; --free: #202d25;
+    --glass: rgba(28,42,34,.55); --glass-2: rgba(255,255,255,.07); --glass-edge: rgba(255,255,255,.18); --glass-hi: rgba(255,255,255,.26); --glass-shadow: 0 14px 40px rgba(0,0,0,.45);
+    --blob1: rgba(63,179,122,.34); --blob2: rgba(240,122,85,.28); --blob3: rgba(70,160,190,.26);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0f1612; --surface: #17211b; --fg: #e9efe9; --muted: #9aab9f; --line: #2a382f;
   --green: #3fb37a; --on-green: #0b130f; --orange: #f07a55; --on-orange: #1a0b06; --free: #202d25;
+  --glass: rgba(28,42,34,.55); --glass-2: rgba(255,255,255,.07); --glass-edge: rgba(255,255,255,.18); --glass-hi: rgba(255,255,255,.26); --glass-shadow: 0 14px 40px rgba(0,0,0,.45);
+  --blob1: rgba(63,179,122,.34); --blob2: rgba(240,122,85,.28); --blob3: rgba(70,160,190,.26);
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -54,6 +67,20 @@ button, input { font: inherit; color: inherit; }
 }
 .top h1 { font-size: clamp(2.4rem, 8vw, 3.8rem); }
 .top .sub { color: var(--muted); letter-spacing: .02em; }
+
+/* hero: فيديو خلفية بدون صوت */
+.hero { position: relative; isolation: isolate; overflow: hidden; border-radius: 10px; padding: 34px 20px 24px; display: flex; flex-direction: column; gap: 26px; background: #0b0f0c; color: #f4f7f4; border: 1px solid var(--line); }
+.hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 30% center; z-index: -2; }
+.hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to left, rgba(8,12,9,.86) 0%, rgba(8,12,9,.6) 55%, rgba(8,12,9,.22) 100%), linear-gradient(to top, rgba(8,12,9,.7), transparent 45%); }
+.hero h1 { color: #fff; text-shadow: 0 2px 18px rgba(0,0,0,.55); }
+.hero .top .sub { color: rgba(244,247,244,.82); }
+.hero .emblem { border-color: rgba(255,255,255,.9); box-shadow: 0 0 0 2px rgba(255,255,255,.25); }
+.hero .btn { background: rgba(255,255,255,.12); color: #fff; border-color: rgba(255,255,255,.3); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.hero .btn:hover { background: rgba(255,255,255,.22); border-color: #fff; }
+.hero .btn.g { background: var(--green); border-color: var(--green); color: var(--on-green); }
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.hero .top { animation: rise .6s ease both; }
+.hero .nav { animation: rise .6s ease .14s both; }
 
 /* views: الصفحة الرئيسية وصفحة اختيار الرئيس */
 .wrap:not([data-view="home"]) .home-only { display: none; }
@@ -154,9 +181,9 @@ a.btn.g { color: var(--on-green); }
 .note { font-size: .85rem; color: var(--muted); }
 
 .booked { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; background: var(--green); color: var(--on-green); border-radius: 6px; padding: 12px 16px; }
-.booked small { font-size: .82rem; opacity: .9; }
+.booked small { font-size: .82rem; opacity: .9; flex-basis: 100%; }
 .booked strong { font-family: var(--font-display); font-size: 1.5rem; line-height: 1.2; }
-.booked .col { display: flex; flex-direction: column; }
+.booked .col { display: flex; flex-wrap: wrap; gap: 2px 28px; }
 
 /* requests */
 .reqs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
@@ -179,29 +206,159 @@ a.btn.g { color: var(--on-green); }
 .const li::before { content: "مادة " counter(art); font-family: var(--font-display); font-weight: 700; color: var(--green); white-space: nowrap; }
 footer { text-align: center; }
 
+/* تطوير الشكل */
+body { background-color: var(--bg); background-image: linear-gradient(180deg, color-mix(in srgb, var(--green) 9%, transparent), transparent 420px), linear-gradient(90deg, color-mix(in srgb, var(--orange) 7%, transparent), transparent 60%); background-repeat: no-repeat; }
+.wrap { gap: 48px; }
+
+/* الهيرو */
+.hero { min-height: 440px; justify-content: flex-end; gap: 28px; padding: 28px 20px 22px; border-radius: 14px; box-shadow: 0 18px 44px rgba(0,0,0,.22); }
+.hero::after { content: ""; position: absolute; inset-inline: 0; bottom: 0; height: 5px; z-index: 1; background: linear-gradient(90deg, var(--orange) 0 50%, var(--green) 50% 100%); }
+.hero .top { margin-top: auto; gap: 20px; }
+.hero .emblem { width: 88px; height: 88px; box-shadow: 0 0 0 2px rgba(255,255,255,.3), 0 10px 30px rgba(0,0,0,.5); }
+.hero h1 { font-size: clamp(2.8rem, 11vw, 4.8rem); letter-spacing: -.01em; }
+.hero .top .sub { font-size: 1.05rem; }
+.hero .nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.hero .nav .btn { justify-content: space-between; padding-inline: 16px; min-height: 52px; font-size: 1rem; }
+.hero .nav .btn::after { content: "\2039"; font-size: 1.5rem; line-height: 1; opacity: .7; }
+.hero-pins { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; color: rgba(244,247,244,.85); font-size: .9rem; animation: rise .6s ease .28s both; }
+.hero-pins .chip { font-weight: 700; padding: 3px 14px; border-radius: 999px; color: #fff; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.3); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+
+/* عناوين الأقسام */
+.balance h2, .const h2 { display: flex; align-items: center; gap: 12px; font-size: 1.6rem; }
+.balance h2::before, .const h2::before { content: ""; width: 22px; height: 22px; border-radius: 4px; flex: none; background: linear-gradient(135deg, var(--green) 0 50%, var(--orange) 50% 100%); }
+
+/* الميزان والأحزاب */
+.bar { height: 72px; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.14); position: relative; }
+.bar::after { content: ""; position: absolute; inset-block: 0; width: 3px; margin-inline-start: -1.5px; inset-inline-start: var(--split, 50%); background: var(--surface); }
+.bar > div { font-family: var(--font-display); font-size: 1.45rem; }
+.party { border-radius: 12px; border-top: 5px solid var(--ring); box-shadow: 0 8px 26px rgba(0,0,0,.09); }
+.party h3 { font-size: 1.45rem; }
+.members { gap: 22px 10px; }
+.member img { width: 88px; height: 88px; box-shadow: 0 0 0 3px var(--surface), 0 8px 18px rgba(0,0,0,.2); transition: transform .2s ease; }
+.member.pres img { width: 104px; height: 104px; }
+.member:hover img { transform: scale(1.07) rotate(-2deg); }
+.member strong { font-size: 1rem; }
+.indep { border-radius: 12px; }
+.indep h3 { font-size: 1.2rem; }
+
+/* الأماكن */
+.place { border-radius: 12px; box-shadow: 0 8px 26px rgba(0,0,0,.09); gap: 18px; }
+.place h2 { font-size: 1.75rem; }
+.booked { position: relative; overflow: hidden; border-radius: 10px; padding: 16px 18px; background-color: var(--green); background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.09) 0 36px, transparent 36px 72px); box-shadow: inset 0 0 0 2px rgba(255,255,255,.35); }
+.booked .col { position: relative; z-index: 1; }
+.booked small { font-weight: 700; letter-spacing: .04em; }
+.booked strong { font-size: 1.7rem; }
+.req { border-radius: 8px; }
+.seg { border-radius: 8px; }
+
+/* الدستور */
+.const ol { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 6px 18px; box-shadow: 0 8px 26px rgba(0,0,0,.07); }
+.const li:last-child { border-bottom: 0; }
+.const li::before { align-self: start; padding: 2px 12px; border-radius: 999px; background: var(--free); font-size: .9rem; }
+
+/* الصفحات الفرعية */
+.page, .nominate { animation: rise .35s ease both; }
+.page h2 { font-size: 2.2rem; display: flex; align-items: center; gap: 12px; }
+.page h2::before { content: ""; width: 10px; height: 1.1em; border-radius: 3px; background: linear-gradient(180deg, var(--green) 0 50%, var(--orange) 50% 100%); }
+.panel { border-radius: 12px; box-shadow: 0 8px 26px rgba(0,0,0,.07); }
+.stat { border-radius: 10px; }
+.stat .val { font-size: 3rem; }
+.nominate { border-radius: 14px; box-shadow: 0 12px 34px rgba(0,0,0,.12); }
+.nom-photo { border-radius: 10px; box-shadow: 0 10px 28px rgba(0,0,0,.25); }
+.btn { border-radius: 8px; transition: transform .15s ease, border-color .15s ease; }
+.btn:active { transform: scale(.97); }
+
+/* ميمز الجروب */
+.vh { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; clip: rect(0 0 0 0); }
+.filebtn { cursor: pointer; display: inline-flex; align-items: center; }
+.vh:focus-visible + .filebtn { outline: 3px solid var(--green); outline-offset: 2px; }
+.memes { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; align-items: start; }
+.memes .empty { grid-column: 1 / -1; }
+.meme { position: relative; margin: 0; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--surface); }
+.meme img { display: block; width: 100%; height: auto; }
+.meme .x { position: absolute; top: 6px; inset-inline-start: 6px; width: 36px; height: 36px; cursor: pointer; border: 0; border-radius: 50%; background: rgba(0,0,0,.65); color: #fff; font-size: 1rem; }
+.meme .x:hover { background: rgba(0,0,0,.85); }
+
+/* الزجاج الشفاف (Liquid Glass) */
+body { background-image: none; }
+body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-events: none; background: radial-gradient(38% 28% at 86% 6%, var(--blob1), transparent 70%), radial-gradient(40% 30% at 6% 28%, var(--blob2), transparent 70%), radial-gradient(46% 34% at 72% 66%, var(--blob3), transparent 72%), radial-gradient(42% 30% at 14% 92%, var(--blob1), transparent 70%), radial-gradient(34% 26% at 92% 94%, var(--blob2), transparent 70%); filter: blur(28px); animation: drift 26s ease-in-out infinite alternate; }
+@keyframes drift { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(-3%, 2.5%, 0) scale(1.07); } }
+
+.party, .place, .panel, .nominate, .const ol, .indep { background: var(--glass); -webkit-backdrop-filter: blur(26px) saturate(170%); backdrop-filter: blur(26px) saturate(170%); border: 1px solid var(--glass-edge); border-radius: 28px; box-shadow: inset 0 1px 0 var(--glass-hi), inset 0 -1px 0 rgba(255,255,255,.08), var(--glass-shadow); }
+.party { border-top: 1px solid var(--glass-edge); background: linear-gradient(180deg, color-mix(in srgb, var(--ring) 20%, transparent), transparent 46%), var(--glass); }
+.indep { border-style: solid; }
+.const ol { padding: 8px 22px; }
+.req, .slot-row, .stat, .empty, .verdict, .spy { background: var(--glass-2); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid var(--glass-edge); border-radius: 20px; box-shadow: inset 0 1px 0 var(--glass-hi); }
+.btn, .tag, .sbtn, .seg, .badge, .form-row input, .form-row select, .add input { -webkit-backdrop-filter: blur(14px) saturate(160%); backdrop-filter: blur(14px) saturate(160%); }
+.btn, .sbtn { border-radius: 999px; background: var(--glass-2); border: 1px solid var(--glass-edge); box-shadow: inset 0 1px 0 var(--glass-hi), 0 4px 14px rgba(20,48,34,.10); }
+.btn.g { background: linear-gradient(180deg, rgba(255,255,255,.34), rgba(255,255,255,0) 60%), color-mix(in srgb, var(--green) 82%, transparent); border-color: rgba(255,255,255,.45); color: var(--on-green); }
+.btn.d { background: linear-gradient(180deg, rgba(255,255,255,.3), rgba(255,255,255,0) 60%), color-mix(in srgb, var(--orange) 84%, transparent); border-color: rgba(255,255,255,.45); color: var(--on-orange); }
+.btn.no { background: linear-gradient(180deg, rgba(255,255,255,.3), rgba(255,255,255,0) 60%), color-mix(in srgb, var(--orange) 84%, transparent); border-color: rgba(255,255,255,.45); }
+.tag { background: var(--glass-2); border-color: var(--glass-edge); box-shadow: inset 0 1px 0 var(--glass-hi); }
+.badge { box-shadow: inset 0 1px 0 rgba(255,255,255,.4); }
+.seg { border-radius: 999px; background: var(--glass-2); border: 1px solid var(--glass-edge); box-shadow: inset 0 1px 0 var(--glass-hi); }
+.seg button { border-inline-start-color: var(--glass-edge); }
+.seg button[aria-pressed="true"] { border-radius: 999px; box-shadow: 0 2px 10px rgba(0,0,0,.25); }
+.form-row input, .form-row select, .add input { border-radius: 999px; background: var(--glass-2); border: 1px solid var(--glass-edge); padding-inline: 18px; box-shadow: inset 0 1px 0 var(--glass-hi); }
+.bar { border-radius: 999px; border: 1px solid var(--glass-edge); box-shadow: inset 0 1px 0 var(--glass-hi), var(--glass-shadow); }
+.bar .g { background: linear-gradient(180deg, rgba(255,255,255,.36), rgba(255,255,255,0) 58%), color-mix(in srgb, var(--green) 86%, transparent); }
+.bar .d { background: linear-gradient(180deg, rgba(255,255,255,.32), rgba(255,255,255,0) 58%), color-mix(in srgb, var(--orange) 88%, transparent); }
+.bar > div { padding-inline: 18px; min-width: 150px; font-size: 1.25rem; }
+.hero { border-radius: 34px; border: 1px solid var(--glass-edge); box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 20px 50px rgba(20,48,34,.28); }
+.hero .btn { border-radius: 999px; box-shadow: inset 0 1px 0 rgba(255,255,255,.4); background: rgba(255,255,255,.16); }
+.hero .btn.g { background: linear-gradient(180deg, rgba(255,255,255,.34), rgba(255,255,255,0) 60%), color-mix(in srgb, var(--green) 85%, transparent); }
+.booked { border-radius: 22px; }
+.nom-photo { border-radius: 24px; border: 1px solid var(--glass-edge); }
+.meme { border-radius: 22px; background: var(--glass); border: 1px solid var(--glass-edge); box-shadow: inset 0 1px 0 var(--glass-hi), var(--glass-shadow); }
+.member img { box-shadow: 0 0 0 3px var(--glass-edge), 0 10px 22px rgba(0,0,0,.22); }
+.track { background: var(--glass-2); }
+.dec { border-bottom-color: var(--glass-edge); }
+.const li { border-bottom-color: var(--glass-edge); }
+.const li::before { background: var(--glass-2); box-shadow: inset 0 1px 0 var(--glass-hi); }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .party, .place, .panel, .nominate, .const ol, .indep { background: var(--surface); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none; }
+  .hero .top, .hero .nav, .hero-pins, .page, .nominate { animation: none; }
+  .member img, .btn { transition: none; }
+}
+
 @media (max-width: 680px) {
   .places, .parties, .nominate, .teams { grid-template-columns: minmax(0, 1fr); }
   .nom-photo { max-width: 220px; }
 }
 @media (prefers-reduced-motion: reduce) { .bar > div, .choices .no { transition: none; } }
 </style>
+</head><body>
 
 <div class="wrap" lang="ar" dir="rtl" data-view="home">
 
-  <header class="top home-only">
-    <div class="emblem" aria-hidden="true"></div>
-    <div>
-      <h1>دولة الجوامعة</h1>
-      <p class="sub">حزبان · مكانان · وقهوة بتحل كل حاجة</p>
-    </div>
-  </header>
+  <section class="hero home-only">
+    <video class="hero-video" id="heroVideo" src="video/hero.mp4" poster="video/hero-poster.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1"></video>
+    <header class="top">
+      <div class="emblem" aria-hidden="true"></div>
+      <div>
+        <h1>دولة الجوامعة</h1>
+        <p class="sub">حزبان · مكانان · وقهوة بتحل كل حاجة</p>
+      </div>
+    </header>
 
-  <nav class="nav home-only" aria-label="صفحات الدولة">
-    <a class="btn g" href="#president">اختيار رئيس</a>
-    <a class="btn" href="#decisions">القرارات الرئاسية</a>
-    <a class="btn" href="#shame">لوحة العار</a>
-    <a class="btn" href="#schedule">جدول الحجوزات</a>
-  </nav>
+    <nav class="nav" aria-label="صفحات الدولة">
+      <a class="btn g" href="#president">اختيار رئيس</a>
+      <a class="btn" href="#decisions">القرارات الرئاسية</a>
+      <a class="btn" href="#shame">لوحة العار</a>
+      <a class="btn" href="#schedule">جدول الحجوزات</a>
+      <a class="btn" href="#memes">ميمز الجروب</a>
+    </nav>
+
+    <p class="hero-pins">
+      <span>حجوزات ملعب البوابة الثابتة</span>
+      <span class="chip">الاتنين · 9 م</span>
+      <span class="chip">الجمعة · 8 م</span>
+    </p>
+  </section>
 
   <a class="btn back pres-only" href="#home">رجوع للدولة</a>
 
@@ -309,6 +466,7 @@ footer { text-align: center; }
         <div class="col">
           <small>الحجز المثبت</small>
           <strong>الاتنين · 9 م</strong>
+          <strong>الجمعة · 8 م</strong>
         </div>
       </div>
       <h3>الطلبات</h3>
@@ -390,6 +548,7 @@ footer { text-align: center; }
       <div class="col">
         <small>الحجز المثبت</small>
         <strong>الاتنين · 9 م</strong>
+          <strong>الجمعة · 8 م</strong>
       </div>
     </div>
     <div class="teams">
@@ -439,6 +598,21 @@ footer { text-align: center; }
     <p class="note">الأرقام بتتحفظ على جهازك بس لحد ما نخليها مشتركة.</p>
   </div>
 
+  <div class="page" data-page="memes" hidden>
+    <a class="btn back" href="#home">رجوع للدولة</a>
+    <header>
+      <h2>ميمز الجروب</h2>
+      <p class="lead">أرشيف الصور والإفيهات اللي الجروب بيضحك عليها.</p>
+    </header>
+    <div class="form-row">
+      <input class="vh" id="memeFile" type="file" accept="image/*" multiple>
+      <label class="btn g filebtn" for="memeFile">+ ضيف ميم</label>
+    </div>
+    <p class="spy" id="memeErr" role="alert" hidden>مفيش مكان كفاية على جهازك. امسح كام ميم وجرب تاني.</p>
+    <div class="memes" id="memeGrid"></div>
+    <p class="note">الميمز اللي بتضيفها بتتحفظ على جهازك بس. قول للرايس يضيف ميمز ثابتة تظهر للكل.</p>
+  </div>
+
   <footer class="note home-only">قول للرايس لو عندك اقتراحات للسايت.</footer>
 </div>
 
@@ -468,6 +642,7 @@ footer { text-align: center; }
   st.shame = st.shame || [];
   st.bookings = st.bookings || [];
   st.record = st.record || { gw: 0, gl: 0, dw: 0, dl: 0 };
+  st.memes = st.memes || [];
   function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
 
   function renderBar() {
@@ -476,6 +651,8 @@ footer { text-align: center; }
     var g = document.getElementById("barG"), d = document.getElementById("barD");
     g.style.width = gp + "%";
     d.style.width = (100 - gp) + "%";
+    var barEl = document.getElementById("bar");
+    barEl.style.setProperty("--split", Math.max(gp, 18) > 82 ? "82%" : Math.max(gp, 18) + "%");
     g.textContent = "الجوامعة " + st.g;
     d.textContent = "الدولية " + st.d;
     document.getElementById("bar").setAttribute("aria-label", "الجوامعة " + st.g + " والدولية " + st.d);
@@ -575,11 +752,19 @@ footer { text-align: center; }
 
   /* الصفحتين: الرئيسية و #president */
   var wrap = document.querySelector(".wrap");
+  var hv = document.getElementById("heroVideo");
+  var REDUCE = false;
+  try { REDUCE = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+  if (hv) { hv.muted = true; if (REDUCE) hv.removeAttribute("autoplay"); }
   function route() {
     var h = (location.hash || "").replace("#", "");
-    var VIEWS = { president: "pres", decisions: "decisions", shame: "shame", schedule: "schedule" };
+    var VIEWS = { president: "pres", decisions: "decisions", shame: "shame", schedule: "schedule", memes: "memes" };
     var v = VIEWS[h] || "home";
     wrap.setAttribute("data-view", v);
+    if (hv && !REDUCE) {
+      if (v === "home") { var pr = hv.play(); if (pr && pr.catch) pr.catch(function () {}); }
+      else hv.pause();
+    }
     var pages = document.querySelectorAll(".page");
     for (var i = 0; i < pages.length; i++) pages[i].hidden = pages[i].getAttribute("data-page") !== v;
     try { window.scrollTo(0, 0); } catch (e) {}
@@ -717,7 +902,66 @@ footer { text-align: center; }
     save(); renderRecord();
   });
 
-  renderBar(); renderAll(); renderDecisions(); renderShame(); renderRecord();
+  /* ميمز الجروب: الثابتة في BUILTIN بتظهر للكل، واللي بتضيفها بتتحفظ على جهازك */
+  var BUILTIN = [];
+  function renderMemes() {
+    var g = document.getElementById("memeGrid");
+    g.textContent = "";
+    var n = 0;
+    BUILTIN.forEach(function (m) {
+      var f = el("figure", "meme");
+      var im = el("img"); im.src = m.src; im.alt = m.alt || "ميم من الجروب"; im.loading = "lazy";
+      f.appendChild(im); g.appendChild(f); n++;
+    });
+    st.memes.forEach(function (m, i) {
+      var f = el("figure", "meme");
+      var im = el("img"); im.src = m.d; im.alt = "ميم من الجروب"; im.loading = "lazy";
+      var x = el("button", "x", "✕");
+      x.type = "button"; x.setAttribute("aria-label", "امسح الميم");
+      x.addEventListener("click", function () { st.memes.splice(i, 1); save(); renderMemes(); });
+      f.appendChild(im); f.appendChild(x); g.appendChild(f); n++;
+    });
+    if (!n) g.appendChild(el("p", "empty", "لسه مفيش ميمز. ضيف أول ميم."));
+  }
+  function shrink(file, cb) {
+    var r = new FileReader();
+    r.onload = function () {
+      var im = new Image();
+      im.onload = function () {
+        var k = Math.min(1, 720 / Math.max(im.width, im.height));
+        var c = document.createElement("canvas");
+        c.width = Math.max(1, Math.round(im.width * k));
+        c.height = Math.max(1, Math.round(im.height * k));
+        c.getContext("2d").drawImage(im, 0, 0, c.width, c.height);
+        cb(c.toDataURL("image/jpeg", 0.72));
+      };
+      im.onerror = function () { cb(null); };
+      im.src = r.result;
+    };
+    r.onerror = function () { cb(null); };
+    r.readAsDataURL(file);
+  }
+  document.getElementById("memeFile").addEventListener("change", function (e) {
+    var files = Array.prototype.slice.call(e.target.files || []);
+    var err = document.getElementById("memeErr");
+    err.hidden = true;
+    var inp = e.target;
+    (function next() {
+      var f = files.shift();
+      if (!f) { inp.value = ""; renderMemes(); return; }
+      shrink(f, function (d) {
+        if (d) {
+          st.memes.push({ d: d });
+          var ok = true;
+          try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (x) { ok = false; }
+          if (!ok) { st.memes.pop(); err.hidden = false; files = []; }
+        }
+        next();
+      });
+    })();
+  });
+
+  renderBar(); renderAll(); renderDecisions(); renderShame(); renderRecord(); renderMemes();
 })();
 </script>
 
