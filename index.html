@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>دولة الجوامعة</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Reem+Kufi:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&family=Reem+Kufi:wght@500;700&display=swap">
 <style>
 /* Layout: بيان رسمي لدولة صغيرة. ترشيح الرئيس فوق، ثم شريط شد الحبل والأعضاء، ثم المكانين جنب بعض، ثم الدستور. */
 :root {
@@ -80,7 +80,7 @@ button, input { font: inherit; color: inherit; }
 .hero .btn.g { background: var(--green); border-color: var(--green); color: var(--on-green); }
 @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 .hero .top { animation: rise .6s ease both; }
-.hero .nav { animation: rise .6s ease .14s both; }
+.nav-below { animation: rise .6s ease both; display: flex; flex-direction: column; gap: 16px; }
 
 /* views: الصفحة الرئيسية وصفحة اختيار الرئيس */
 .wrap:not([data-view="home"]) .home-only { display: none; }
@@ -211,17 +211,17 @@ body { background-color: var(--bg); background-image: linear-gradient(180deg, co
 .wrap { gap: 48px; }
 
 /* الهيرو */
-.hero { min-height: 440px; justify-content: flex-end; gap: 28px; padding: 28px 20px 22px; border-radius: 14px; box-shadow: 0 18px 44px rgba(0,0,0,.22); }
+.hero { min-height: 360px; justify-content: flex-end; gap: 28px; padding: 28px 20px 22px; border-radius: 14px; box-shadow: 0 18px 44px rgba(0,0,0,.22); }
 .hero::after { content: ""; position: absolute; inset-inline: 0; bottom: 0; height: 5px; z-index: 1; background: linear-gradient(90deg, var(--orange) 0 50%, var(--green) 50% 100%); }
 .hero .top { margin-top: auto; gap: 20px; }
 .hero .emblem { width: 88px; height: 88px; box-shadow: 0 0 0 2px rgba(255,255,255,.3), 0 10px 30px rgba(0,0,0,.5); }
 .hero h1 { font-size: clamp(2.8rem, 11vw, 4.8rem); letter-spacing: -.01em; }
 .hero .top .sub { font-size: 1.05rem; }
-.hero .nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-.hero .nav .btn { justify-content: space-between; padding-inline: 16px; min-height: 52px; font-size: 1rem; }
-.hero .nav .btn::after { content: "\2039"; font-size: 1.5rem; line-height: 1; opacity: .7; }
-.hero-pins { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; color: rgba(244,247,244,.85); font-size: .9rem; animation: rise .6s ease .28s both; }
-.hero-pins .chip { font-weight: 700; padding: 3px 14px; border-radius: 999px; color: #fff; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.3); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.nav .btn { justify-content: space-between; padding-inline: 16px; min-height: 52px; font-size: 1rem; }
+.nav .btn::after { content: "\2039"; font-size: 1.5rem; line-height: 1; opacity: .7; }
+.hero-pins { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; color: var(--muted); font-size: .9rem; animation: rise .6s ease .14s both; }
+.hero-pins .chip { font-weight: 700; padding: 3px 14px; border-radius: 999px; color: var(--fg); background: var(--glass-2); border: 1px solid var(--glass-edge); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
 
 /* عناوين الأقسام */
 .balance h2, .const h2 { display: flex; align-items: center; gap: 12px; font-size: 1.6rem; }
@@ -320,9 +320,73 @@ body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-e
   .party, .place, .panel, .nominate, .const ol, .indep { background: var(--surface); }
 }
 
+
+/* رئيس الدولة */
+.pres-card { display: grid; grid-template-columns: minmax(0, 190px) minmax(0, 1fr); gap: 22px; align-items: center; padding: 20px; background: var(--glass); -webkit-backdrop-filter: blur(26px) saturate(170%); backdrop-filter: blur(26px) saturate(170%); border: 1px solid var(--glass-edge); border-radius: 28px; box-shadow: inset 0 1px 0 var(--glass-hi), var(--glass-shadow); }
+.pres-photo { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 20%; border-radius: 22px; border: 1px solid var(--glass-edge); box-shadow: 0 10px 28px rgba(0,0,0,.25); transition: opacity .25s ease; }
+.pres-photo.swap { opacity: 0; }
+.pres-body { display: flex; flex-direction: column; gap: 12px; min-width: 0; align-items: flex-start; }
+.pres-body h2 { font-size: clamp(1.7rem, 6vw, 2.4rem); }
+.pres-body .who { color: var(--muted); }
+.pres-body .spy { width: 100%; }
+
+/* الأخبار: شكل الجرنان القديم */
+.news-peek { display: block; text-decoration: none; color: inherit; }
+.np-peek { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 18px; border-radius: 20px; background: #e8dfc8; color: #1d1a14; font-family: "Amiri", serif; box-shadow: inset 0 0 40px rgba(120,90,40,.25), 0 8px 24px rgba(0,0,0,.2); }
+.np-peek b { font-size: 1.05rem; border: 1px solid #1d1a14; padding: 0 10px; letter-spacing: .04em; }
+.np-peek strong { font-size: 1.25rem; line-height: 1.4; flex: 1 1 200px; }
+.np-peek span { font-size: .85rem; opacity: .75; }
+.paper { --ink: #1d1a14; position: relative; overflow: hidden; color: var(--ink); font-family: "Amiri", "Noto Naskh Arabic", serif; font-size: 1.05rem; line-height: 1.85; padding: 18px 16px 26px; border-radius: 6px; background-color: #e8dfc8; background-image: radial-gradient(120% 90% at 50% 0%, rgba(255,250,235,.55), transparent 60%), repeating-linear-gradient(0deg, rgba(90,65,30,.035) 0 2px, transparent 2px 5px); box-shadow: inset 0 0 90px rgba(120,90,40,.32), 0 18px 40px rgba(0,0,0,.3); }
+.paper * { min-width: 0; }
+.np-mast { text-align: center; border-bottom: 4px double var(--ink); padding-bottom: 10px; margin-bottom: 14px; }
+.np-meta { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: .82rem; border-bottom: 1px solid var(--ink); padding-bottom: 4px; margin-bottom: 6px; }
+.np-title { font-family: "Amiri", serif; font-weight: 700; font-size: clamp(2.6rem, 12vw, 4.6rem); line-height: 1.15; letter-spacing: -.01em; margin: 0; }
+.np-sub { font-size: .85rem; font-style: italic; }
+.np-empty { text-align: center; padding: 30px 8px; border: 1px dashed var(--ink); }
+.np-lead { padding-bottom: 14px; margin-bottom: 14px; border-bottom: 2px solid var(--ink); }
+.np-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; }
+.np-grid .np-art { padding: 0 14px 14px; border-inline-start: 1px solid var(--ink); margin-bottom: 14px; }
+.np-grid .np-art:nth-child(2n+1) { border-inline-start: 0; padding-inline-start: 0; }
+.np-grid .np-art:nth-child(2n) { padding-inline-end: 0; }
+.np-art { position: relative; }
+.np-kicker { display: inline-block; background: var(--ink); color: #e8dfc8; font-size: .8rem; font-weight: 700; padding: 0 10px; letter-spacing: .06em; margin-bottom: 4px; }
+.np-h { font-family: "Amiri", serif; font-weight: 700; font-size: 1.45rem; line-height: 1.35; margin: 0 0 4px; text-wrap: balance; }
+.np-lead .np-h { font-size: clamp(2rem, 8vw, 3.2rem); line-height: 1.25; }
+.np-by { font-size: .8rem; opacity: .75; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); padding: 0 2px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.np-body { overflow-wrap: anywhere; text-align: justify; hyphens: auto; }
+.np-body p { margin: 0 0 .5em; }
+.np-lead .np-body { column-count: 2; column-gap: 22px; column-rule: 1px solid var(--ink); }
+.np-photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin: 8px 0; }
+.np-photos figure { margin: 0; border: 1px solid var(--ink); padding: 3px; background: rgba(255,250,235,.4); cursor: zoom-in; }
+.np-photos figure.big { grid-column: 1 / -1; cursor: zoom-out; }
+.np-photos img { display: block; width: 100%; height: auto; max-height: 340px; object-fit: cover; filter: grayscale(1) contrast(1.08) sepia(.22); mix-blend-mode: multiply; }
+.np-photos figure.big img { max-height: none; }
+.np-x { cursor: pointer; border: 1px solid var(--ink); background: transparent; color: var(--ink); width: 26px; height: 26px; line-height: 1; border-radius: 50%; font-size: .8rem; flex: none; }
+.np-x:hover { background: var(--ink); color: #e8dfc8; }
+.np-foot { text-align: center; font-size: .8rem; border-top: 4px double var(--ink); padding-top: 8px; margin-top: 4px; }
+.news-form { display: flex; flex-direction: column; gap: 10px; }
+.news-form input[type="text"], .news-form textarea { min-height: 44px; width: 100%; border: 1px solid var(--glass-edge); border-radius: 20px; padding: 8px 18px; background: var(--glass-2); box-shadow: inset 0 1px 0 var(--glass-hi); font: inherit; color: inherit; resize: vertical; }
+.news-form textarea { min-height: 110px; }
+.thumbs { display: flex; gap: 8px; flex-wrap: wrap; }
+.thumb { position: relative; width: 76px; height: 76px; border-radius: 14px; overflow: hidden; border: 1px solid var(--glass-edge); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb button { position: absolute; top: 3px; inset-inline-start: 3px; width: 24px; height: 24px; border: 0; border-radius: 50%; background: rgba(0,0,0,.7); color: #fff; cursor: pointer; font-size: .75rem; }
+.news-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+@media (max-width: 680px) {
+  .pres-card { grid-template-columns: minmax(0, 130px) minmax(0, 1fr); gap: 14px; padding: 16px; }
+  .np-grid { grid-template-columns: minmax(0, 1fr); }
+  .np-grid .np-art, .np-grid .np-art:nth-child(2n) { border-inline-start: 0; padding-inline: 0; }
+  .np-lead .np-body { column-count: 1; }
+}
+
+/* مظاهرة الجوامعة */
+.marchers { position: fixed; left: 0; bottom: env(safe-area-inset-bottom, 0px); width: 92px; height: auto; pointer-events: none; z-index: 40; transform: translateX(100vw); animation: march 26s linear infinite; }
+@keyframes march { from { transform: translateX(100vw); } to { transform: translateX(-130px); } }
+@media (prefers-reduced-motion: reduce) { .marchers { display: none; } }
+
 @media (prefers-reduced-motion: reduce) {
   body::before { animation: none; }
-  .hero .top, .hero .nav, .hero-pins, .page, .nominate { animation: none; }
+  .hero .top, .nav-below, .hero-pins, .page, .nominate { animation: none; }
   .member img, .btn { transition: none; }
 }
 
@@ -348,8 +412,11 @@ body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-e
       </div>
     </header>
 
+  </section>
+
+  <section class="nav-below home-only">
     <nav class="nav" aria-label="صفحات الدولة">
-      <a class="btn g" href="#president">اختيار رئيس</a>
+      <a class="btn g" href="#news">الأخبار</a>
       <a class="btn" href="#decisions">القرارات الرئاسية</a>
       <a class="btn" href="#shame">لوحة العار</a>
       <a class="btn" href="#schedule">جدول الحجوزات</a>
@@ -363,19 +430,16 @@ body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-e
     </p>
   </section>
 
-  <a class="btn back pres-only" href="#home">رجوع للدولة</a>
+  <a class="news-peek home-only" href="#news" id="newsPeek" hidden></a>
 
-  <section class="nominate pres-only" aria-labelledby="nom-title">
-    <img class="nom-photo" src="img/president.jpg" alt="صورة المرشح لرئاسة الدولة" width="480" height="600">
-    <div class="nom-body">
-      <span class="tag">ترشيح رئيس الدولة</span>
-      <h2 id="nom-title">هل تقبل باعما جومعا رئيساً للدولة؟</h2>
-      <div class="choices" id="choices">
-        <button class="btn g yes" id="yes" type="button">اه طبعا اقبل بالفحل اعما جومعا</button>
-        <button class="btn no" id="no" type="button">احا مش موافق</button>
-      </div>
-      <p class="verdict" id="yesMsg" hidden>تم تسجيل موافقتك. مبروك للرئيس.</p>
-      <p class="spy" id="spyMsg" role="alert" hidden>تم تحديد الجاسوس. سيتم إرسال بياناتك ومناقشة استئصال خصاويك وبيعهم وشراء علبة LM للمغواري.</p>
+  <section class="pres-card home-only" aria-labelledby="pres-title">
+    <img class="pres-photo" id="presPhoto" src="img/rais.jpg" alt="رئيس الدولة" width="480" height="600">
+    <div class="pres-body">
+      <span class="tag">رئيس الدولة</span>
+      <h2 id="pres-title">اعما جومعا</h2>
+      <p class="who" id="presWho">رئيس دولة الجوامعة.</p>
+      <button class="btn" id="otherPres" type="button">اختيار رئيس آخر</button>
+      <p class="spy" id="spyMsg" role="alert" hidden>بتفكر في إيه يا عرص، مفيش غير ريس واحد.</p>
     </div>
   </section>
 
@@ -601,6 +665,27 @@ body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-e
     <p class="note">الأرقام متشاركة مع كل الجروب.</p>
   </div>
 
+  <div class="page" data-page="news" hidden>
+    <a class="btn back" href="#home">رجوع للدولة</a>
+    <header>
+      <h2>الأخبار</h2>
+      <p class="lead">اكتب الخبر وتفاصيله وضيف صور، ويتنشر لوحده في الجريدة.</p>
+    </header>
+    <form class="panel news-form" id="newsForm">
+      <h3>خبر جديد</h3>
+      <input id="newsH" type="text" placeholder="عنوان الخبر" maxlength="90" aria-label="عنوان الخبر">
+      <textarea id="newsT" placeholder="تفاصيل الخبر" maxlength="1500" aria-label="تفاصيل الخبر"></textarea>
+      <div class="thumbs" id="newsThumbs"></div>
+      <p class="spy" id="newsErr" role="alert" hidden>مش قادر أنشر الخبر. الصور كبيرة أوي أو النت واقع.</p>
+      <div class="news-actions">
+        <input class="vh" id="newsFile" type="file" accept="image/*" multiple>
+        <label class="btn filebtn" for="newsFile">+ ضيف صور</label>
+        <button class="btn g" type="submit" id="newsSend">انشر الخبر</button>
+      </div>
+    </form>
+    <div class="paper" id="paper"></div>
+  </div>
+
   <div class="page" data-page="memes" hidden>
     <a class="btn back" href="#home">رجوع للدولة</a>
     <header>
@@ -618,6 +703,8 @@ body::before { content: ""; position: fixed; inset: -12%; z-index: -1; pointer-e
 
   <footer class="note home-only">قول للرايس لو عندك اقتراحات للسايت.</footer>
 </div>
+
+<img class="marchers" src="img/march.gif" alt="" aria-hidden="true" width="92" height="123">
 
 <script type="module">
 import { addItem, listenItems, removeItem, listenDoc, bump, mergeDoc } from "./firebase.js";
@@ -637,7 +724,7 @@ import { addItem, listenItems, removeItem, listenDoc, bump, mergeDoc } from "./f
   var BASE = { g: 1, d: 2 };
   var st = {
     pts: { g: 0, d: 0 }, status: {}, topics: [], decisions: [], shame: [],
-    record: { gw: 0, gl: 0, dw: 0, dl: 0 }, memes: []
+    record: { gw: 0, gl: 0, dw: 0, dl: 0 }, memes: [], news: []
   };
 
   function showNetErr(e) {
@@ -708,54 +795,23 @@ import { addItem, listenItems, removeItem, listenDoc, bump, mergeDoc } from "./f
     guard(addItem("requests", { t: v }));
   });
 
-  /* ترشيح الرئيس: الاختيار التاني بيهرب */
-  var choices = document.getElementById("choices");
-  var yes = document.getElementById("yes");
-  var no = document.getElementById("no");
-  var yesMsg = document.getElementById("yesMsg");
+  /* رئيس الدولة: الاختيار الآخر بيطلع الصورة التانية */
+  var presPhoto = document.getElementById("presPhoto");
+  var otherBtn = document.getElementById("otherPres");
   var spyMsg = document.getElementById("spyMsg");
-
-  function flee(px, py) {
-    var box = choices.getBoundingClientRect();
-    var bw = no.offsetWidth, bh = no.offsetHeight;
-    var maxX = Math.max(0, box.width - bw);
-    var maxY = Math.max(0, box.height - bh);
-    var minY = Math.min(maxY, yes.offsetHeight + 12);
-    var best = { x: 0, y: minY }, bestD = -1;
-    for (var i = 0; i < 14; i++) {
-      var x = Math.random() * maxX;
-      var y = minY + Math.random() * (maxY - minY);
-      var d = px == null ? 1 : Math.hypot(x + bw / 2 - px, y + bh / 2 - py);
-      if (d > bestD) { bestD = d; best = { x: x, y: y }; }
-    }
-    no.style.right = "auto";
-    no.style.left = best.x + "px";
-    no.style.top = best.y + "px";
-  }
-  function pointerPos(e) {
-    var box = choices.getBoundingClientRect();
-    return [e.clientX - box.left, e.clientY - box.top];
-  }
-  choices.addEventListener("pointermove", function (e) {
-    var pos = pointerPos(e);
-    var r = no.getBoundingClientRect(), box = choices.getBoundingClientRect();
-    var cx = r.left - box.left + r.width / 2, cy = r.top - box.top + r.height / 2;
-    if (Math.hypot(pos[0] - cx, pos[1] - cy) < 90) flee(pos[0], pos[1]);
-  });
-  no.addEventListener("pointerdown", function (e) {
-    var pos = pointerPos(e);
-    flee(pos[0], pos[1]);
-  });
-  no.addEventListener("click", function () {
-    yesMsg.hidden = true;
-    spyMsg.hidden = false;
-  });
-  yes.addEventListener("click", function () {
-    spyMsg.hidden = true;
-    yesMsg.hidden = false;
+  var otherOn = false;
+  otherBtn.addEventListener("click", function () {
+    otherOn = !otherOn;
+    presPhoto.classList.add("swap");
+    setTimeout(function () {
+      presPhoto.src = otherOn ? "img/rais2.jpg" : "img/rais.jpg";
+      presPhoto.classList.remove("swap");
+    }, 220);
+    spyMsg.hidden = !otherOn;
+    otherBtn.textContent = otherOn ? "طيب، الرئيس هو الرئيس" : "اختيار رئيس آخر";
   });
 
-  /* الصفحتين: الرئيسية و #president */
+  /* الصفحات */
   var wrap = document.querySelector(".wrap");
   var hv = document.getElementById("heroVideo");
   var REDUCE = false;
@@ -763,7 +819,7 @@ import { addItem, listenItems, removeItem, listenDoc, bump, mergeDoc } from "./f
   if (hv) { hv.muted = true; if (REDUCE) hv.removeAttribute("autoplay"); }
   function route() {
     var h = (location.hash || "").replace("#", "");
-    var VIEWS = { president: "pres", decisions: "decisions", shame: "shame", schedule: "schedule", memes: "memes" };
+    var VIEWS = { news: "news", decisions: "decisions", shame: "shame", schedule: "schedule", memes: "memes" };
     var v = VIEWS[h] || "home";
     wrap.setAttribute("data-view", v);
     if (hv && !REDUCE) {
@@ -961,6 +1017,130 @@ import { addItem, listenItems, removeItem, listenDoc, bump, mergeDoc } from "./f
     })();
   });
 
+  /* الأخبار: جريدة بتتبني لوحدها من الأخبار المحفوظة */
+  var NEWS_MAX_CHARS = 850000, NEWS_MAX_PHOTOS = 6;
+  var pend = [];
+  function pendSize() { return pend.reduce(function (a, d) { return a + d.length; }, 0); }
+  function renderThumbs() {
+    var box = document.getElementById("newsThumbs");
+    box.textContent = "";
+    pend.forEach(function (d, i) {
+      var t = el("div", "thumb");
+      var im = el("img"); im.src = d; im.alt = "صورة الخبر";
+      var x = el("button", null, "✕"); x.type = "button"; x.setAttribute("aria-label", "شيل الصورة");
+      x.addEventListener("click", function () { pend.splice(i, 1); renderThumbs(); });
+      t.appendChild(im); t.appendChild(x); box.appendChild(t);
+    });
+  }
+  function shrinkNews(file, cb) {
+    var r = new FileReader();
+    r.onload = function () {
+      var im = new Image();
+      im.onload = function () {
+        var k = Math.min(1, 640 / Math.max(im.width, im.height));
+        var c = document.createElement("canvas");
+        c.width = Math.max(1, Math.round(im.width * k));
+        c.height = Math.max(1, Math.round(im.height * k));
+        c.getContext("2d").drawImage(im, 0, 0, c.width, c.height);
+        cb(c.toDataURL("image/jpeg", 0.62));
+      };
+      im.onerror = function () { cb(null); };
+      im.src = r.result;
+    };
+    r.onerror = function () { cb(null); };
+    r.readAsDataURL(file);
+  }
+  document.getElementById("newsFile").addEventListener("change", function (e) {
+    var files = Array.prototype.slice.call(e.target.files || []);
+    var err = document.getElementById("newsErr");
+    err.hidden = true;
+    var inp = e.target;
+    (function next() {
+      var f = files.shift();
+      if (!f) { inp.value = ""; return; }
+      if (pend.length >= NEWS_MAX_PHOTOS) { err.hidden = false; inp.value = ""; return; }
+      shrinkNews(f, function (d) {
+        if (!d || pendSize() + d.length > NEWS_MAX_CHARS) { err.hidden = false; next(); return; }
+        pend.push(d); renderThumbs(); next();
+      });
+    })();
+  });
+  document.getElementById("newsForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var h = document.getElementById("newsH"), t = document.getElementById("newsT");
+    var err = document.getElementById("newsErr"), btn = document.getElementById("newsSend");
+    var hv = h.value.trim(), tv = t.value.trim();
+    if (!hv) { h.focus(); return; }
+    err.hidden = true; btn.disabled = true;
+    addItem("news", { h: hv, t: tv, p: pend.slice() }).then(function () {
+      h.value = ""; t.value = ""; pend = []; renderThumbs(); btn.disabled = false;
+    }, function (x) { showNetErr(x); err.hidden = false; btn.disabled = false; });
+  });
+
+  function newsArticle(n, isLead) {
+    var a = el("article", "np-art" + (isLead ? " np-lead" : ""));
+    if (isLead) a.appendChild(el("span", "np-kicker", "الخبر الرئيسي"));
+    a.appendChild(el("h3", "np-h", n.h));
+    var by = el("div", "np-by");
+    by.appendChild(el("span", null, "ميلانو · " + fmtDate(n.ts)));
+    var x = el("button", "np-x", "✕"); x.type = "button"; x.setAttribute("aria-label", "امسح الخبر");
+    x.addEventListener("click", function () { if (confirm("تمسح الخبر ده؟")) guard(removeItem("news", n.id)); });
+    by.appendChild(x);
+    a.appendChild(by);
+    if (n.p && n.p.length) {
+      var ph = el("div", "np-photos");
+      n.p.forEach(function (d) {
+        var f = el("figure"); var im = el("img"); im.src = d; im.alt = "صورة الخبر"; im.loading = "lazy";
+        f.appendChild(im);
+        f.addEventListener("click", function () { f.classList.toggle("big"); });
+        ph.appendChild(f);
+      });
+      a.appendChild(ph);
+    }
+    if (n.t) {
+      var body = el("div", "np-body");
+      n.t.split(/\n+/).forEach(function (line) { if (line.trim()) body.appendChild(el("p", null, line.trim())); });
+      a.appendChild(body);
+    }
+    return a;
+  }
+  function renderNews() {
+    var paper = document.getElementById("paper");
+    var peek = document.getElementById("newsPeek");
+    paper.textContent = "";
+    var list = st.news.slice().reverse();
+    var m = el("div", "np-mast");
+    var meta = el("div", "np-meta");
+    var today = "";
+    try { today = new Date().toLocaleDateString("ar-EG", { weekday: "long", day: "numeric", month: "long", year: "numeric" }); } catch (e) {}
+    meta.appendChild(el("span", null, "العدد رقم " + (list.length || 1)));
+    meta.appendChild(el("span", null, today));
+    meta.appendChild(el("span", null, "الثمن: قهوة"));
+    m.appendChild(meta);
+    m.appendChild(el("div", "np-title", "جريدة الجوامعة"));
+    m.appendChild(el("div", "np-sub", "تصدر عن دولة الجوامعة · من ملعب البوابة وقهوة ميلانو"));
+    paper.appendChild(m);
+    if (!list.length) {
+      paper.appendChild(el("p", "np-empty", "لسه مفيش أخبار. الدولة هادية بشكل مريب."));
+      peek.hidden = true;
+      return;
+    }
+    paper.appendChild(newsArticle(list[0], true));
+    if (list.length > 1) {
+      var g = el("div", "np-grid");
+      list.slice(1).forEach(function (n) { g.appendChild(newsArticle(n, false)); });
+      paper.appendChild(g);
+    }
+    paper.appendChild(el("div", "np-foot", "طُبعت في مطبعة الجوامعة · كل الحقوق محفوظة للقهوة"));
+    peek.textContent = "";
+    var box = el("div", "np-peek");
+    box.appendChild(el("b", null, "آخر خبر"));
+    box.appendChild(el("strong", null, list[0].h));
+    box.appendChild(el("span", null, fmtDate(list[0].ts)));
+    peek.appendChild(box);
+    peek.hidden = false;
+  }
+
   /* الاستماع للسيرفر: أي تغيير عند أي حد بيظهر عند الكل لحظياً */
   listenDoc("matches", "points", function (d) { st.pts = { g: d.g || 0, d: d.d || 0 }; renderBar(); }, showNetErr);
   listenDoc("matches", "record", function (d) {
@@ -985,7 +1165,12 @@ import { addItem, listenItems, removeItem, listenDoc, bump, mergeDoc } from "./f
     renderMemes();
   }, showNetErr);
 
-  renderBar(); renderAll(); renderDecisions(); renderShame(); renderRecord(); renderMemes();
+  listenItems("news", function (items) {
+    st.news = items.map(function (x) { return { id: x.id, h: x.h || "", t: x.t || "", p: x.p || [], ts: tsOf(x) }; });
+    renderNews();
+  }, showNetErr);
+
+  renderBar(); renderNews(); renderAll(); renderDecisions(); renderShame(); renderRecord(); renderMemes();
 })();
 </script>
 
